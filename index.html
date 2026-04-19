@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ceeg</title>
+    <meta
+      name="description"
+      content="A private planning system for Jess and Ceeg’s care team, now connected to live event discovery."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-glow glow-one"></div>
+    <div class="page-glow glow-two"></div>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="Ceeg home">
+          <span class="brand-mark">C</span>
+          <span class="brand-copy">
+            <strong>Ceeg</strong>
+            <small>Private planning system</small>
+          </span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="siteNav"
+          aria-label="Toggle navigation"
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="siteNav">
+          <a href="#monthAhead">Live Planning</a>
+          <a href="#calendar">History</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Live event planning for Jess and the care team</p>
+            <h1>One calm calendar for what is worth doing next.</h1>
+            <p class="hero-text">
+              Ceeg brings live events from Ticketmaster, the Arsht Center, and Florida Grand Opera
+              into one planning surface so Jess can quickly see what’s worth considering, what
+              needs a decision soon, and what’s already booked.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#monthAhead">Open live planning</a>
+            </div>
+          </div>
+
+          <section class="hero-panel hero-recommendations hidden" id="heroSmartPicks" aria-label="Good options for Ceeg this week">
+            <div class="panel-shell">
+              <div class="panel-topline">
+                <span class="panel-kicker" id="smartPicksKicker">🦋 Good options for Ceeg this week</span>
+                <span class="panel-chip" id="sourceSummary">Loading sources</span>
+              </div>
+              <div class="hero-smart-picks-grid" id="heroSmartPicksGrid"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="live-section month-ahead-section" id="monthAhead">
+        <div class="container container-calendar">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="eyebrow">Live Planning</p>
+              <h2 class="section-title">The calendar is the plan.</h2>
+              <p class="section-copy">
+                Scan the next stretch, narrow it only when needed, and move the right outings into
+                Considering or Booked.
+              </p>
+            </div>
+            <div class="month-ahead-heading-tools">
+              <button class="text-link filter-reset hidden" id="resetHiddenButton" type="button">Restore hidden</button>
+              <p class="month-ahead-hidden-note hidden" id="hiddenItemsNote"></p>
+              <div class="month-ahead-summary" id="monthAheadSummary"></div>
+            </div>
+          </div>
+
+          <div class="calendar-shell">
+            <div class="calendar-toolbar">
+              <div class="calendar-toolbar-primary">
+                <div class="calendar-nav-cluster" aria-label="Calendar navigation">
+                  <div class="calendar-nav calendar-nav-controls">
+                    <button class="calendar-nav-button" id="calendarPrevButton" type="button" aria-label="Previous period">‹</button>
+                    <button class="calendar-today-button" id="calendarTodayButton" type="button">Today</button>
+                    <button class="calendar-nav-button" id="calendarNextButton" type="button" aria-label="Next period">›</button>
+                  </div>
+                  <div class="calendar-period" aria-live="polite">
+                    <span class="calendar-period-kicker" id="calendarViewLabel">Calendar view</span>
+                    <div class="calendar-period-label" id="calendarPeriodLabel">Loading period</div>
+                    <span class="calendar-period-hint" id="calendarPeriodHint">Use arrows to move through time</span>
+                  </div>
+                </div>
+
+                <div class="calendar-toolbar-actions">
+                  <div class="calendar-controls-cluster">
+                    <div class="calendar-view-toggles" id="calendarViewToggles" aria-label="Calendar views">
+                      <button class="pill" type="button" data-calendar-view="next10">Next 10 Days</button>
+                      <button class="pill" type="button" data-calendar-view="month">Month</button>
+                      <button class="pill active" type="button" data-calendar-view="next30">Next 30 Days</button>
+                    </div>
+                    <div class="planner-launchers">
+                      <button class="button button-secondary compact-button planner-launcher-button" id="planWeekButton" type="button">Plan My Week</button>
+                      <button class="button button-secondary compact-button planner-launcher-button" id="planMonthButton" type="button">Plan My Month</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="toolbar calendar-filter-toolbar">
+              <div class="filter-bar">
+                <div class="filter-bar-row filter-bar-row-main">
+                  <div class="filter-cluster filter-cluster-status">
+                    <span class="filter-row-label">Show</span>
+                    <div class="status-filter-pills compact-pills" id="statusFilterRow">
+                      <button class="pill active" type="button" data-status-filter="all">All Events</button>
+                      <button class="pill" type="button" data-status-filter="Considering">Considering</button>
+                      <button class="pill" type="button" data-status-filter="Booked">Booked</button>
+                      <button class="pill" type="button" data-status-filter="Completed">Completed</button>
+                      <button class="pill" type="button" data-status-filter="Not Interested">Hidden</button>
+                    </div>
+                  </div>
+                  <div class="filter-row-tools filter-cluster filter-cluster-search">
+                    <div class="event-search event-search-inline" id="eventSearch">
+                      <label class="visually-hidden" for="eventSearchInput">Search event titles</label>
+                      <div class="event-search-field">
+                        <input id="eventSearchInput" class="event-search-input" type="text" placeholder="Search titles" autocomplete="off" />
+                        <button class="event-search-clear hidden" id="eventSearchClear" type="button" aria-label="Clear event search">Clear</button>
+                      </div>
+                      <p class="event-search-feedback hidden" id="eventSearchFeedback" aria-live="polite"></p>
+                      <div class="event-search-suggestions hidden" id="eventSearchSuggestions" role="listbox" aria-label="Matching events"></div>
+                    </div>
+                    <div class="filter-bar-actions">
+                      <button class="button button-secondary compact-button" id="advancedFiltersToggle" type="button" aria-expanded="false" aria-controls="advancedFiltersPanel">
+                        Filters
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="filter-bar-row filter-bar-row-categories">
+                  <span class="filter-row-label">Categories</span>
+                  <button class="category-pill category-pill-all" id="allCategoriesButton" type="button">Select All</button>
+                  <div class="category-pills category-pills-single-row" id="categoryPills"></div>
+                </div>
+
+                <div class="filter-bar-row filter-bar-row-time">
+                  <span class="filter-row-label">Time Range</span>
+                  <div class="time-range-card">
+                    <div class="time-range-grid">
+                      <label class="filter-date-wrap filter-time-wrap" for="startTimeInput">
+                        <span class="filter-input-label">Earliest start</span>
+                        <select id="startTimeInput" class="filter-date-input filter-time-select"></select>
+                      </label>
+                      <label class="filter-date-wrap filter-time-wrap" for="endTimeInput">
+                        <span class="filter-input-label">Latest end</span>
+                        <select id="endTimeInput" class="filter-date-input filter-time-select"></select>
+                      </label>
+                      <button class="button button-secondary compact-button time-range-reset" id="resetTimeRangeButton" type="button">Default</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="advanced-filters hidden" id="advancedFiltersPanel">
+                  <div class="advanced-filters-grid">
+                    <div class="advanced-filter-group filter-row-venue">
+                      <span class="filter-row-label">Venue</span>
+                      <label class="filter-select-wrap" for="venueFilter">
+                        <span class="visually-hidden">Filter by venue</span>
+                        <select id="venueFilter" class="filter-select">
+                          <option value="all">All venues</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <div class="advanced-filter-group filter-row-source">
+                      <span class="filter-row-label">Source</span>
+                      <label class="filter-select-wrap" for="sourceFilter">
+                        <span class="visually-hidden">Filter by source</span>
+                        <select id="sourceFilter" class="filter-select">
+                          <option value="all">All Sources</option>
+                          <option value="Arsht Center">Arsht Center</option>
+                          <option value="Ticketmaster">Ticketmaster</option>
+                          <option value="Florida Grand Opera">Florida Grand Opera</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <div class="advanced-filter-group" id="discoverRunFilterRow">
+                      <span class="filter-row-label">Run Focus</span>
+                      <div class="run-filter-pills compact-pills">
+                        <button class="pill active" type="button" data-run-filter="all">All Runs</button>
+                        <button class="pill" type="button" data-run-filter="new_releases">New Releases</button>
+                        <button class="pill" type="button" data-run-filter="multiple_dates">Multiple Dates</button>
+                        <button class="pill" type="button" data-run-filter="ending_soon">Ending Soon</button>
+                      </div>
+                    </div>
+
+                    <div class="advanced-filter-group">
+                      <span class="filter-row-label">Date Range</span>
+                      <div class="date-range-grid">
+                        <label class="filter-date-wrap" for="startDateInput">
+                          <span class="filter-input-label">Start date</span>
+                          <input id="startDateInput" class="filter-date-input" type="date" />
+                        </label>
+                        <label class="filter-date-wrap" for="endDateInput">
+                          <span class="filter-input-label">End date</span>
+                          <input id="endDateInput" class="filter-date-input" type="date" />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="advanced-filters-actions">
+                    <button class="button button-secondary compact-button" id="refreshButton" type="button">Refresh events</button>
+                    <button class="button button-secondary compact-button" id="categoryResetButton" type="button">Reset categories</button>
+                    <button class="button button-secondary compact-button" id="discoverResetButton" type="button">Reset filters</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-summary" id="discoverFilterSummary" aria-live="polite"></div>
+
+          <div class="month-ahead-attention hidden" id="monthAheadAttention"></div>
+          <div class="month-ahead-board" id="monthAheadBoard"></div>
+          <div class="empty-state hidden" id="monthAheadEmpty">
+            <strong class="empty-state-title">Nothing is showing in this planning slice.</strong>
+            <p class="empty-state-copy" id="monthAheadEmptyCopy">
+              Reset filters or widen the current planning window if you want a broader view.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="live-section calendar-section" id="calendar">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">History</p>
+            <h2 class="section-title">Completed outings stay visible without crowding the plan.</h2>
+            <p class="section-copy">
+              Live Planning handles active decisions. History keeps follow-through visible without
+              competing with the calendar.
+            </p>
+          </div>
+
+          <div class="calendar-summary section-strip">
+            <div class="planning-summary-card">
+              <p class="feature-label">Booked Now</p>
+              <strong id="historyBookedCount">--</strong>
+              <span>Committed plans that still belong in the active calendar</span>
+            </div>
+            <div class="planning-summary-card">
+              <p class="feature-label">Completed Total</p>
+              <strong id="historyCompletedCount">--</strong>
+              <span>Past outings kept separate from the active planning surface</span>
+            </div>
+          </div>
+
+          <div class="section-feedback hidden" id="calendarFeedback" role="status" aria-live="polite"></div>
+
+          <section class="booked-section section-strip">
+            <div class="completed-header">
+              <div>
+                <p class="feature-label">Your upcoming plans</p>
+                <h3 class="completed-title">Booked plans, ready to revisit without adding friction.</h3>
+              </div>
+            </div>
+            <div class="booked-list" id="bookedList"></div>
+            <p class="empty-state hidden" id="bookedEmpty">No booked outings yet.</p>
+          </section>
+
+          <section class="weekly-summary section-strip">
+            <div class="completed-header weekly-summary-header">
+              <div>
+                <p class="feature-label">Ready to share</p>
+                <h3 class="completed-title" id="weeklySummaryTitle">Week of --</h3>
+                <p class="section-copy">A calm, screenshot-ready plan for the care team this week.</p>
+                <p class="weekly-summary-helper">Screenshot this for the care team.</p>
+              </div>
+            </div>
+            <div class="weekly-summary-list" id="weeklySummaryList"></div>
+            <p class="empty-state hidden" id="weeklySummaryEmpty">Nothing is booked for this week yet.<br />A couple of bookings will turn this into an easy shareable plan.</p>
+          </section>
+
+          <section class="completed-section">
+            <div class="completed-header">
+              <div>
+                <p class="feature-label">Past outings</p>
+                <h3 class="completed-title">Completed plans stay visible as a personal record.</h3>
+              </div>
+              <button class="pill" id="completedToggle" type="button" aria-expanded="false">Show Completed</button>
+            </div>
+
+            <div class="completed-panel hidden" id="completedPanel">
+              <div class="event-grid event-grid-compact" id="completedGrid"></div>
+              <p class="empty-state hidden" id="completedEmpty">No completed events yet.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="ceeg-note">
+        <div class="container note-panel">
+          <p class="eyebrow">Planned around Ceeg</p>
+          <h2 class="section-title">Private, personal, and built for thoughtful decisions.</h2>
+          <p class="section-copy">
+            Ceeg is not a generic events app. It is a live planning system shaped around opera,
+            ballet, music, painting, flowers, calm pacing, and the practical realities of caregiving.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toastMessage" role="status" aria-live="polite"></div>
+
+    <section class="planner-modal hidden" id="plannerModal" aria-hidden="true">
+      <div class="planner-modal-backdrop" id="plannerModalBackdrop"></div>
+      <div class="planner-panel" role="dialog" aria-modal="true" aria-labelledby="plannerPanelTitle">
+        <div class="planner-panel-header">
+          <div class="planner-panel-heading">
+            <p class="feature-label" id="plannerPanelEyebrow">Recommended Plan</p>
+            <h3 class="planner-panel-title" id="plannerPanelTitle">A calm weekly planning pass.</h3>
+            <p class="planner-panel-copy" id="plannerPanelCopy">A short weekly shortlist based on timing, favorites, urgency, and current planning state.</p>
+          </div>
+          <div class="planner-panel-header-actions">
+            <p class="planner-panel-range" id="plannerPanelRange">Top events sorted by fit, urgency, and timing.</p>
+            <button class="pill" id="plannerModalClose" type="button">Close</button>
+          </div>
+        </div>
+        <div class="planner-panel-sections">
+          <section class="planner-section">
+            <div class="planner-section-header">
+              <h4>Recommended Plan</h4>
+              <p>Best-fit options to decide, book, or dismiss without leaving Live Planning.</p>
+            </div>
+            <div class="planner-list" id="plannerRecommendedList"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <template id="eventCardTemplate">
+      <article class="event-card">
+        <div class="event-card-top">
+          <span class="event-source"></span>
+          <span class="event-status-badge"></span>
+        </div>
+        <img class="event-image" alt="" />
+        <div class="event-body">
+          <p class="event-category"></p>
+          <h3 class="event-title"></h3>
+          <div class="event-detail-stack">
+            <p class="event-meta event-venue"></p>
+            <p class="event-meta event-datetime"></p>
+          </div>
+          <p class="event-description"></p>
+          <div class="tag-row"></div>
+          <div class="detail-list">
+            <span class="detail-pill detail-cost"></span>
+            <span class="detail-pill detail-travel"></span>
+          </div>
+          <div class="note-slot">
+            <p class="note-slot-label">Planning Notes</p>
+            <p class="note-slot-copy">Space reserved for Jess’s quick fit and logistics notes.</p>
+          </div>
+          <div class="card-actions card-actions-primary">
+            <a class="button button-secondary booking-link" target="_blank" rel="noreferrer">Open</a>
+            <button class="button button-secondary action-consider" type="button">Consider</button>
+          </div>
+          <div class="card-actions card-actions-secondary">
+            <div class="status-actions"></div>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <template id="discoverGroupTemplate">
+      <section class="discover-group">
+        <div class="discover-group-header">
+          <div>
+            <p class="feature-label discover-group-label"></p>
+            <h3 class="discover-group-title"></h3>
+          </div>
+          <span class="discover-group-count"></span>
+        </div>
+        <p class="discover-group-copy"></p>
+        <div class="event-grid discover-group-grid"></div>
+        <p class="empty-state hidden discover-group-empty"></p>
+      </section>
+    </template>
+
+    <template id="planningGroupTemplate">
+      <section class="planning-group">
+        <div class="planning-group-header">
+          <div>
+            <p class="feature-label planning-group-label"></p>
+            <h3 class="planning-group-title"></h3>
+          </div>
+          <span class="planning-group-count"></span>
+        </div>
+        <p class="planning-group-copy"></p>
+        <div class="event-grid event-grid-compact planning-group-grid"></div>
+        <p class="empty-state hidden planning-group-empty"></p>
+      </section>
+    </template>
+
+    <template id="calendarGroupTemplate">
+      <section class="calendar-group">
+        <div class="calendar-group-header">
+          <div>
+            <p class="feature-label calendar-group-label"></p>
+            <h3 class="calendar-group-title"></h3>
+          </div>
+          <span class="calendar-group-count"></span>
+        </div>
+        <p class="calendar-group-copy"></p>
+        <div class="event-grid event-grid-compact calendar-group-grid"></div>
+        <p class="empty-state hidden calendar-group-empty"></p>
+      </section>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
